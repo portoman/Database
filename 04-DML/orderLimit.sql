@@ -1,0 +1,11 @@
+# ORDENAR ASCENDENTEMENTE:ORDER BY id ASC:
+SELECT * FROM usuarios ORDER BY id ASC;
+
+# ORDENAR DESCENDENTEMENTE:ORDER BY id DESC:
+SELECT * FROM usuarios ORDER BY id DESC;
+
+# LIMITAR LOS REGISTROS A SACAR: LIMIT 1:
+SELECT * FROM usuarios LIMIT 1;
+
+# LIMITAR LOS REGISTROS A SACAR ENTRE UN NÚMERO Y OTRO. LIMIT (Empieza en primer número) (El segundo número es la cantidad de números que queremos que saque):
+SELECT * FROM usuarios LIMIT 1,3;

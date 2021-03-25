@@ -1,0 +1,45 @@
+# MOSTRAR FECHA ACTUAL: CURDATE #
+
+SELECT fecha, CURDATE() AS "FECHA ACTUAL" FROM usuarios;
+
+# MOSTRAR DIAS DE DIFERENCIA ENTRE UNA FECHA Y OTRA #
+
+SELECT DATEDIFF(fecha,CURDATE()) AS "Diferencia entre fechas" FROM usuarios;
+
+# MOSTRAR NOMBRE DEL DIA #
+
+SELECT DAYNAME(fecha) AS "Nombre del día" FROM usuarios;
+
+# MOSTRAR DIA DEL MES #
+
+SELECT DAYOFMONTH(fecha) AS "Día del mes" FROM usuarios;
+
+# MOSTRAR DIA DE LA SEMANA #
+
+SELECT DAYOFWEEK(fecha) AS "Día de la semana" FROM usuarios;
+
+# MOSTRAR DIA DEL AÑO #
+
+SELECT DAYOFYEAR(fecha) AS "Día del año" FROM usuarios;
+
+# MOSTRAR NÚMERO DE MES #
+
+SELECT MONTH(fecha) AS "Número de mes" FROM usuarios;
+
+# MOSTRAR NÚMERO DE AÑO #
+
+SELECT YEAR(fecha) AS "Número de año" FROM usuarios;
+
+# MOSTRAR NÚMERO DE DÍA: DAY, HORA: HOUR, MINUTO: MINUTE #
+
+# MOSTRAR HORA ACTUAL: CURTIME#
+
+SELECT CURTIME() AS "HORA ACTUAL" FROM usuarios;
+
+# MOSTRAR FECHA COMPLETA: SYSDATE() #
+
+SELECT SYSDATE() AS "FECHA COMPLETA" FROM usuarios;
+
+# CAMBIAR FORMATO #
+
+SELECT DATE_FORMAT(fecha, "%d-%m-%y") AS "Cambio formato" FROM usuarios;
