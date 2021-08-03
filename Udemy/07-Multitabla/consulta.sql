@@ -17,7 +17,7 @@ SELECT e.id, e.titulo, u.nombre, c.nombre, e.usuario_id, u.id AS "u.id", e.categ
     FROM entradas e, usuarios u, categorias c
         WHERE e.usuario_id=u.id AND e.categoria_id=c.id;
 
-#INNER JOIN-> Para ser más eficiente#
+# INNER JOIN-> Para ser más eficiente #
 
 SELECT e.id, e.titulo, u.nombre, c.nombre, e.usuario_id, u.id AS "u.id", e.categoria_id, c.id AS "c.id"
     FROM entradas e

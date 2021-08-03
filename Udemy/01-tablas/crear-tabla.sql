@@ -15,6 +15,16 @@ LONGTEXT        4 billones de caracteres
 MEDIUMINT
 BIGINT
 
+*/
+# CREAR BASE DE DATOS #
+CREATE DATABASE perros;
+
+# MOSTRAR BASES DE DATOS #
+SHOW DATABASES;
+
+# BORRAR BASE DE DATOS #
+DROP DATABASE perros;
+
 /* CREAR TABLA
  */
 
@@ -28,3 +38,7 @@ password    varchar(255),
 CONSTRAINT pk_usuarios PRIMARY KEY(id)
 );
 
+/* BORRAR TABLA
+ */
+
+DROP TABLE usuarios;

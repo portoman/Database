@@ -4,4 +4,4 @@
 
 SELECT cl.nombre, v.nombre
     FROM clientes cl
-        INNER JOIN vendedores v ON cl.vendedor_id = v.id WHERE v.nombre="Lurdes";
+        INNER JOIN vendedores v ON cl.vendedor_id = v.id WHERE v.nombre="Alfonso";

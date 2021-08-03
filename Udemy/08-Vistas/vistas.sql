@@ -2,8 +2,7 @@
 Vistas:
     La podemos definir como una consulta almacenada en la base de datos que se utiliza
 como una tabla virtual.
-No almacena datos sino que utiliza asociaciones y datos originales
-de las tablas, de forma que siempre se mantiene actualizada
+No almacena datos sino que utiliza asociaciones y datos originales de las tablas, de forma que siempre se mantiene actualizada
  */
 
 CREATE VIEW entradas_con_nombre AS

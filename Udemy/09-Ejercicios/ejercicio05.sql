@@ -1,5 +1,5 @@
 /* 
-5. Mostrar todos los vendedores con su nombre y el dias que llevan en el concesionario
+5. Mostrar todos los vendedores con su nombre y los dias que llevan en el concesionario
 
  */
 
