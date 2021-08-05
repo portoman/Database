@@ -2,7 +2,7 @@
 
 SELECT * FROM usuarios WHERE email="portbuj@yahoo.es";
 
-# SACAME LOS USUARIOS QUE SE APELLIDEN PORTO" 
+# SACAME LOS USUARIOS QUE SE APELLIDEN PORTO 
 
 SELECT * FROM usuarios WHERE apellidos="Porto";
 

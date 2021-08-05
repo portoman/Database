@@ -27,3 +27,9 @@ SELECT DISTINCT DATABASE() FROM usuarios;
 # SI ESTÁ VACIO, CAMBIARLO POR ALGO #
 
 SELECT IFNULL(apellidos, "ESTE CAMPO ESTÁ VACIO") AS "IS NULL" FROM usuarios;
+
+# BETWEEN
+
+SELECT column_name(s)
+FROM table_name
+WHERE column_name BETWEEN value1 AND value2;
