@@ -71,5 +71,60 @@ select nombrecliente
     from clientes
         where  codigocliente IN(select codigocliente from pedidos) and ciudad='Miami';
 
+15. Mostrar el precio final de cada pedido
+
+select codigopedido, sum(cantidad*preciounidad)
+    from detallepedidos group by codigopedido;
+        
+
+16. Mostrar lo que ha pagado cada cliente
+
+select codigocliente, sum(cantidad)
+    from pagos
+        group by codigocliente;
+
+17. Mostrar el número de productos de cada gama
+
+select gama,count(*) "Total"
+    from productos
+        group by gama;
 
 
+18. Mostrar el código de los productos donde se haya vendido el producto de la gama 'Aromáticas' más caro
+
+select codigoproducto, gama, precioventa 
+    from productos 
+        where gama='Aromáticas';
+
+
+
+19. Mostrar el código de los pedidos donde se hayan vendido más de 6 productos
+    select codigopedido, cantidad
+        from detallepedidos
+            where cantidad>6
+                order by cantidad asc;
+
+20. Mostrar el código de los pedidos donde el precio del pedido sea superior a la media de todos los pedidos 
+
+select codigopedido
+    from detallepedidos
+        group by codigopedido
+            having sum(cantidad*preciounidad)
+                >
+                    (select avg(sum(cantidad*preciounidad))
+                        from detallepedidos
+                            group by codigopedido)
+        
+
+/*
+select pe.codigopedido
+    from pedidos pe
+        where
+            (select sum(dp.cantidad*dp.preciounidad) as total
+                    from detallepedidos dp
+                        where pe.codigopedido=dp.codigopedido
+                           group by dp.codigopedido)
+        >(select avg(t.total)
+            from (select codigopedido, sum(cantidad*preciounidad) as total
+                        from detallepedidos
+                            group by codigopedido) t);*/
