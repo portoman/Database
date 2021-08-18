@@ -113,7 +113,7 @@ select codigopedido
                 >
                     (select avg(sum(cantidad*preciounidad))
                         from detallepedidos
-                            group by codigopedido)
+                            group by codigopedido);
         
 
 /*
@@ -128,3 +128,71 @@ select pe.codigopedido
             from (select codigopedido, sum(cantidad*preciounidad) as total
                         from detallepedidos
                             group by codigopedido) t);*/
+
+
+/*Vistas*/
+21. Realiza la vista que muestre los datos de un empleado (nombre, apellidos, ciudad de la oficina) 
+y lo mismo para su jefe (en la misma fila)
+
+create or replace view empleadosJefes as
+    select e.codigoempleado, e.nombre||' '|| e.apellido1||' '|| e.apellido2 "Nombre completo empleado", oe.ciudad, 
+        j.nombre||' '|| j.apellido1||' '||j.apellido2 "Nombre completo jefe", oj.ciudad
+            from empleados e, oficinas oe, empleados j, oficinas oj
+                where e.codigooficina=oe.codigooficina
+                    and e.codigojefe=j.codigoempleado
+                        and j.codigooficina=oj.codigooficina ORDER by e.codigoempleado asc;
+
+22. Realiza una vista que muestre el código de pedido y su total en euros
+
+create or replace view pedidos_total as
+    select p.codigopedido, sum(dp.cantidad*dp.preciounidad) as total
+        from pedidos p, detallepedidos dp
+            where p.codigopedido=dp.codigopedido
+                group by p.codigopedido;
+
+
+23. Realiza una vista con la información del pedido
+(código, fechapedido, fechaesperada, fechaentrega, nombre cliente y total en euros)
+
+create or replace view info_pedido as
+    select p.codigopedido, p.fechapedido, p.fechaesperada, p.fechaentrega, c.nombrecliente, pt.total
+        from pedidos p, clientes C, pedidos_total pt
+            where p.codigocliente=c.codigocliente
+                and pt.codigopedido=p.codigopedido
+                    order by pt.total desc;
+
+
+24. Devolver la gama de productos más vendida. Sin Vistas
+
+select t.gama , t.cantidad
+from(
+    select sum(dp.cantidad) as cantidad,  p.gama
+        from detallepedidos dp, productos p
+            where dp.codigoproducto=p.codigoproducto
+             group by p.gama 
+                    order by cantidad desc) t 
+                    where rownum=1;
+
+25. Devolver la gama de productos más vendida. Con Vistas
+
+create or replace view gamas_vendidas as
+    select sum(dp.cantidad) as cantidad,  p.gama
+        from detallepedidos dp, productos p
+            where dp.codigoproducto=p.codigoproducto
+             group by p.gama
+
+select gama, cantidad
+    from gamas_vendidas
+        where cantidad=
+                        (select max(cantidad) 
+                            from gamas_vendidas);
+
+26. Muestra el país (cliente) donde menos pedidos se hacen. Usando vistas
+select pais 
+from(select c.pais, count(*)
+    from clientes c, info_pedido ip
+        where c.nombrecliente=ip.nombrecliente
+            group by c.pais order by count(*) asc)
+                where rownum=1;
+
+
