@@ -12,7 +12,6 @@
 
     declare
         mi_numero number(8) := 5;
-
     begin 
 
     if (mi_numero>10) then 
@@ -307,3 +306,41 @@ begin
     v_total_filas := actualizaPrecioCoche(v_matricula, v_nuevo_precio_compra);
     DBMS_OUTPUT.PUT_LINE('Se han modificado '||v_total_filas || ' filas');
 end
+
+
+#16. Crea procedimiento que reciba como parámetros de entrada: P_ID_MARCA, P_NUMERO_COCHES. Utiliza un bucle 
+para insertar N registros nuevos en la tabla COCHE. El número de registros a insertar viene indicado 
+por el parámetro P_NUMEROS_COCHES(CONTADOR) y el bucle empezará en 1, los datos a insertar 
+serán:
+    - matricula='A00' ||CONTADOR
+    - DESCRIPCION=P_ID_MARCA
+    - ID_MARCA=P_ID_MARCA
+    - precio_compra=nulo
+
+Controlar excepción para cuando exista algún coche en la bbdd
+
+/*Crear el procedimiento*/
+
+create or replace procedure creaCoches(
+    p_id_marca coche.id_marca%type, 
+    p_numero_coches number)
+as
+
+begin
+    for contador in 1...p_numero_coches loop
+        insert into coche values('A00'||contador, p_id_marca, p_id_marca, null)
+    end loop;
+
+exception 
+    when dup_val_on_index then
+        DBMS_OUTPUT.PUT_LINE('Registro duplicado');
+end;
+
+/
+
+declare
+    p_id_marca coche.id_marca%type := &id; 
+    p_numero_coches number(8) :=&num;
+begin
+    creaCoches(p_id_marca, p_numero_coches);
+end;
