@@ -344,3 +344,161 @@ declare
 begin
     creaCoches(p_id_marca, p_numero_coches);
 end;
+
+/*Parámetros de salida*/
+#18. Crea un procedimiento al que le pasaremos el dni_cliente y la matrícula. El procedimiento deberá
+controlar en las ventas de los coches(tabla vende) los siguientes supuestos:
+    A. Si no existe un registro con ese dni_cliente y esa matrícula saltará a la zona de excepciones y mostrará un mensaje
+        "No existe la venta introducida"
+    B. Si existe la venta introducida:
+        1. Mostrará el precio antiguo
+        2. Actualizará el precio subiendo 1000 euros
+        3. Devolverá en un parámetro de salida del procedimiento (ps_nuevo_precio) el precio nuevo tras la actualización
+    Crea un bloque anónimo que llame al procedimiento anterior y muestre el precio nuevo devuelto por el procedimiento
+
+create or replace procedure actualizaVenta(
+    p_dni_cliente vende.dni_cliente%type,
+    p_matricula vende.matricula%type,
+    ps_nuevo_precio out vende.precio%type
+)
+as 
+    venta vende%rowtype;
+begin
+    select * into venta
+    from vende
+    where dni_cliente=p_dni_cliente
+    and matricula=p_matricula;
+
+    DBMS_OUTPUT.PUT_LINE('El precio antiguo es '|| venta.precio)
+
+    ps_nuevo_precio=venta.precio+1000;
+
+    update vende 
+    set precio =ps_nuevo_precio
+    where dni_cliente=p_dni_cliente
+    and matricula=p_matricula;
+    
+exception
+    when no_data_found then
+     DBMS_OUTPUT.PUT_LINE('No existe la venta introducida');   
+
+end;
+
+declare 
+    v_dni_cliente vende.dni_cliente%type :=&dni;
+    v_matricula vende.matricula%type :=&matricula;
+    v_nuevo_precio out vende.precio%type;
+begin
+    actualizaVenta(v_dni_cliente, v_matricula, v_nuevo_precio);
+    if v_nuevo_precio is not null then
+        DBMS_OUTPUT.PUT_LINE('El nuevo precio es '||v_nuevo_precio);   
+    end if;
+end;
+
+/*Cursores: Para hacer consultas que devuelvan más de un dato*/
+
+#19. Crear un cursor para ver todos los clientes que no hayan hecho pagos. Hazlo con un loop
+
+declare 
+    v_nombrecliente clientes.nombrecliente%type;
+    cursor clientes_sin_pagos_cursor is 
+    select nombrecliente
+    from clientes c
+    where not exists(select * from pagos where codigocliente=c.codigocliente);
+
+begin
+
+    open clientes_sin_pagos_cursor; /*Se abre y se debe cerrar el cursor*/
+
+        loop
+            fetch clientes_sin_pagos_cursor into v_nombrecliente;
+            exit when clientes_sin_pagos_cursor%notfound;
+            DBMS_OUTPUT.PUT_LINE(v_nombrecliente);   
+
+        end loop;
+
+    close clientes_sin_pagos_cursor;
+
+end;
+
+#20. Crear un cursor para ver todos los clientes que no hayan hecho pagos. Hazlo con un for
+/*Con el for se simplifica*/
+
+declare 
+    cursor clientes_sin_pagos_cursor is 
+    select nombrecliente
+    from clientes c
+    where not exists(select * from pagos where codigocliente=c.codigocliente);
+
+begin
+
+    for registro in clientes_sin_pagos_cursor loop
+
+        DBMS_OUTPUT.PUT_LINE(registro.nombrecliente);   
+
+    end loop;
+
+end;
+
+
+#21. Crear un cursor para ver totos los productos pedidos de un pedido. Muestra la cantidad también
+
+create or replace procedure mostrarProductosPedido(p_codigopedido pedidos.codigopedido%type)
+as
+
+cursor prod_pedido is
+select p.nombre, dp.cantidad
+from productos p, detallepedidos dp
+where p.codigoproducto=dp.codigoproducto
+and dp.codigopedido=p_codigopedido;
+begin
+    for registro in prod_pedido loop
+    DBMS_OUTPUT.PUT_LINE('Se ha pedido del producto llamado'||registro.nombre||': '||registro.cantidad||' unidades');   
+    end loop;
+end;
+/
+
+declare
+    p_codigopedido pedidos.codigopedido%type :=&codigo;
+begin
+    mostrarProductosPedido(p_codigopedido);
+end;
+
+
+#22. Crear un cursor para ver todos los empleados de un jefe
+
+create or replace procedure mostrarEmpleadosJefe(p_codigojefe empleados.codigojefe%type)
+as
+
+cursor empleado_jefe is
+
+    select emp.nombre ||' '||emp.apellido1||' '||emp.apellido2 as nombre_empleado
+    from empleados emp, empleados jefe
+    where emp.codigojefe=jefe.codigoempleado
+    and jefe.codigoempleado=p_codigojefe;
+
+v_nombre_jefe varchar2(80);
+begin 
+select  nombre ||' '||apellido1||' '||apellido2 into v_nombre_jefe
+from empleados
+where codigoempleado=p_codigojefe;
+
+    DBMS_OUTPUT.PUT_LINE('El jefe llamado '||v_nombre_jefe||' tiene a cargo a los siguientes empleados: ');  
+    for registro in empleado_jefe loop
+    DBMS_OUTPUT.PUT_LINE(registro.nombre_empleado);   
+    end loop;
+
+    exception
+    when no_data_found then
+            DBMS_OUTPUT.PUT_LINE('No existe ese jefe'); 
+end;
+
+  
+
+/
+
+declare
+    p_codigojefe empleados.codigojefe%type :=&codigo;
+begin
+    mostrarEmpleadosJefe(p_codigojefe);
+end;
