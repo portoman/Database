@@ -502,3 +502,43 @@ declare
 begin
     mostrarEmpleadosJefe(p_codigojefe);
 end;
+
+#23. Trigger para actualizar el stock de productos después de insertar en la tabla de detallepedidos
+
+
+/*Creando el trigger*/
+create or replace trigger productos_actualizar_stock
+after insert on detallepedidos for each row
+declare 
+
+begin
+    update productos
+    set cantidadenstock= cantidadenstock -:new.cantidad
+    where codigoproducto=:new.codigoproducto; 
+end;
+
+/*Ejecutar el trigger: Después de insertar en detallepedidos*/
+
+insert into detallepedidos (1, 'FR-4', 10, 10, 6);
+
+#24. Crea un trigger que al actualizar la columna fechaentrega de pedidos la compare con la fechaespera.
+Si fechaentrega es menor que fechaespera añadir a los comentarios 'Pedido entregado antes de lo esperado'
+Si fechaentrega es mayor que fechaespera añadir a los comentarios 'Pedido entregado con retraso'
+
+create or replace trigger actualizar_comentarios_pedidos
+before update of fechaentrega on pedidos FOR EACH ROW
+
+declare
+begin
+    if :new.fechaentrega is not null then
+        if :new.fechaentrega > :old.fechaentregada then 
+            :new.comentarios =: old.comentarios || ' Pedido entregado con retraso';
+        else
+            :new.comentarios =: old.comentarios || ' Pedido entregado antes de lo esperado';
+        end if;
+    end if;
+end;
+
+/
+
+update pedidos set fechaentrega=to_date('01/01/15') where codigopedido =1;
