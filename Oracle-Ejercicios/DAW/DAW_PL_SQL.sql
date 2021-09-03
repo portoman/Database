@@ -542,3 +542,44 @@ end;
 /
 
 update pedidos set fechaentrega=to_date('01/01/15') where codigopedido =1;
+
+#25. Modificar el ejercicio anterior para que solo se ejecute si fechaentrega es mayor que fechaespera.
+
+create or replace trigger actualizar_comentarios_pedidos
+before update of fechaentrega on pedidos FOR EACH ROW
+when (new.fechaentrega is not null and new.fechaentrega >old.fechaentrega)
+
+declare
+begin
+    :new.comentarios =: :old.comentarios || ' Pedido entregado con retraso';
+end;
+
+/
+
+update pedidos set fechaentrega=to_date('01/01/15') where codigopedido =1;
+
+#26. Modifica el trigger del video 11 si el stock que vamos a modificar se queda a  cero o menor, devolver una excepción ORA
+
+create or replace trigger productos_actualizar_stock
+before insert on detallepedidos for each row
+declare 
+    v_stock_actual productos.cantidadenstock%type;
+begin
+
+    select cantidadenstock into v_stock_actual 
+    from productos
+    where codigoproducto= :new.codigoproducto;
+
+    if v_stock_actual - :new.cantidad  > 0 then 
+        update productos
+        set cantidadenstock= cantidadenstock -:new.cantidad
+        where codigoproducto=:new.codigoproducto;
+    else 
+        raise_application_error(-20001, 'No hay suficiente stock');
+    end; 
+
+     
+end;
+
+
+insert into detallepedidos (2, 'FR-4', 10, 10, 6);
