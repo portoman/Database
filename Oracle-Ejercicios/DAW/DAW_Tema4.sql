@@ -118,3 +118,74 @@ WHERE apellidos LIKE '%Perez%' OR apellidos LIKE '%Pérez%';
 
 # 5.Numero total de productos que vende la empresa (en la columna debe aparecer "Número de productos")
 SELECT COUNT(*) "Numero de Productos" FROM PRODUCTOS;
+
+# 6. Número total de productos que no han sido pedidos
+
+select count(*) from productos where codigo not in( 
+select producto from lineas);
+
+
+SELECT COUNT(*) "Numero de productos no pedidos" FROM LINEAS l
+Right outer join productos p on p.codigo = l.producto
+where l.num_pedido IS NULL;
+
+# 7. De cada pedido mostrar su número, importe y datos del cliente
+
+select p.num, p.total, c.codigo, c.nombre, c.apellidos
+   from pedidos p, clientes C
+      where c.codigo=p.cliente;
+
+SELECT p.num   NUMERO,
+       p.total IMPORTE,
+       c.*
+FROM PEDIDOS p
+         JOIN clientes C on p.cliente = C.codigo;
+
+# 8.Codigo, nombre  del cliente y numero total de pedidos que ha realizado cada cliente durante 2016
+
+select  p.cliente, c.nombre, count(p.num) from pedidos p
+   join clientes c on p.cliente = c.codigo
+      where p.fecha like '%16'
+      group by p.cliente, c.nombre
+        order by p.cliente;
+
+
+SELECT codigo, nombre, COUNT(p.cliente) "Numero Pedidos"
+FROM clientes c 
+INNER JOIN pedidos p ON c.codigo = p.cliente
+WHERE p.fecha BETWEEN to_date('01-01-2016', 'dd-mm-yyyy') 
+AND to_date('31-12-2016', 'dd-mm-yyyy')
+GROUP BY c.codigo, p.cliente, c.nombre
+order by codigo;
+
+
+# 9.Codigo, nombre y numero total de pedidos de los clientes que han realizado mas de un pedido
+
+select  p.cliente, c.nombre, count(p.num) from pedidos p
+   join clientes c on p.cliente = c.codigo
+    group by p.cliente, c.nombre 
+        having count(p.num)>1
+            order by p.cliente ;
+
+
+
+# 10.Para cada pedido mostrar su numero, codigo  del cliente y  numero total de lineas que tiene.
+
+select p.num, p.cliente, count(p.num)
+   from lineas l inner join pedidos p on l.num_pedido=p.num
+      group by p.num, p.cliente
+         order by p.num;
+
+
+
+SELECT 
+    p.num "Numero pedido",
+    p.cliente "Codigo cliente", 
+    COUNT(p.num) "Numero lineas" 
+FROM 
+    pedidos p
+inner join lineas l on l.num_pedido = p.num
+group by p.num, p.cliente
+order by p.num;
+
+# 11.Codigo de cliente, nombre de producto y cantidad total que ha pedido cada cliente de cada producto
