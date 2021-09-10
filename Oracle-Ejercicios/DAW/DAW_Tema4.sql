@@ -189,3 +189,57 @@ group by p.num, p.cliente
 order by p.num;
 
 # 11.Codigo de cliente, nombre de producto y cantidad total que ha pedido cada cliente de cada producto
+
+select pe.cliente, l.producto, po.nombre, count(l.cantidad)
+   from pedidos pe, lineas l, productos po where pe.num=l.num_pedido and po.codigo=l.producto 
+      group by pe.cliente, l.producto, po.nombre
+         order by pe.cliente;
+
+
+SELECT 
+   c.codigo, 
+   p.nombre, 
+   sum(l.cantidad) "Cantidad productos"
+FROM 
+   productos p
+inner join lineas l on p.codigo = l.producto
+inner join pedidos pe on pe.num = l.num_pedido
+ join clientes c on pe.cliente = c.codigo
+group by c.codigo, p.nombre
+order by c.codigo;
+
+# 12. Mostrar el codigo del producto, el numero de veces que ha sido pedido y
+la cantidad total de unidades que se han pedido (los que no hayan sido pedidos tambien 
+deben ser mostrados con estos valores a 0/*RIGHT OUTER o LEFT OUTER JOIN*/) (combinacion externa)
+
+SELECT  
+   p.codigo,
+   count(l.producto) "Veces pedido", 
+   sum(NVL(l.cantidad, 0)) "Numero ventas"
+FROM 
+   lineas l
+right outer join productos p on p.codigo = l.producto
+group by p.codigo
+order by p.codigo;
+
+# 13. Datos del producto del que mas unidades se han pedido
+
+SELECT p.*, l.cantidad FROM productos p
+   join lineas l on l.producto = p.codigo
+      order by l.cantidad desc
+         fetch next 1 rows only;
+
+# 14. Datos del producto mas caro del pedido 1
+
+select l.*, p.* from lineas l
+   join productos p on l.producto=p.codigo
+      where num_pedido=1
+         order by p.precio desc
+
+# 15. Codigo de cada cliente y cantidad total que se ha gastado en 2016
+
+select c.codigo, c.nombre, sum(p.total) from clientes C
+   left outer join pedidos p on c.codigo=p.cliente
+   where p.fecha like '%16'
+      group by c.codigo, c.nombre order by c.codigo asc;
+
