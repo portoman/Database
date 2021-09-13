@@ -243,3 +243,52 @@ select c.codigo, c.nombre, sum(p.total) from clientes C
    where p.fecha like '%16'
       group by c.codigo, c.nombre order by c.codigo asc;
 
+# 16.Sentencia que muestre los productos con este formato:
+
+CODIGO_PROD	NOMBRE	PRECIO
+10001---------------	Pantalón	--------50
+10002---------------	Pantalón Pitillo	--------60
+10003---------------	Pantalón Campana	--------55
+20001---------------	Camisa M/L	--------65;
+
+SELECT 
+    LPAD(p.codigo, 15, '-') "CODIGO",
+    p.nombre "NOMBRE",
+    LPAD(p.precio, 8, '-') "PRECIO" 
+FROM productos p;
+
+# 17. Escribe los datos de los pedidos  y su clientes  con el siguiente formato:
+ 
+Nº Pedido	Fecha Pedido	Nombre Completo
+1	jueves : 10/octubre /2015	Garcia Perez, Luis
+2	lunes : 10/febrero /2016	Garcia Perez, Luis
+3	jueves : 20/febrero /2016	Garcia Perez, Luis
+4	martes : 25/marzo /2016	Lopez Garrido, Maria
+5	martes : 25/marzo /2016	Gamez Valiente, Javier
+ 
+SELECT 
+    p.num "Nº Pedido",
+    to_char(p.fecha, 'day : dd/month/yyyy')"Fecha Pedido",
+    c.apellidos ||', '|| c.nombre "Nombre Completo"
+FROM pedidos p
+join clientes c on c.codigo = p.cliente;
+
+
+# 18. Solo con subconsultas (sin combinar tablas) Datos de los clientes que han pedido el producto de nombre ‘PANTALON’.
+
+
+   select cliente, num from pedidos where num in(
+      select num_pedido from lineas where producto in
+         (select codigo from productos where nombre='PANTALoN'));
+
+SELECT c.* 
+from clientes c
+where c.codigo IN 
+        (SELECT c.codigo
+        from lineas l, pedidos pe, productos p
+            where c.codigo = pe.cliente AND
+            pe.num = l.num_pedido AND
+            l.producto = p.codigo AND
+            p.nombre = 'PANTALÓN'
+);
+
