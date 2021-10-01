@@ -29,6 +29,7 @@ ALTER TABLE empleados MODIFY salario NUMBER CONSTRAINT salario_nn NOT NULL;
 ALTER TABLE empleados MODIFY email VARCHAR(20) CONSTRAINT email_uk UNIQUE;
 
 
+
 /*Insert*/
 
 INSERT INTO empresas VALUES(1,'Altia', 'Oleiros');
@@ -104,10 +105,13 @@ INSERT INTO prueba_numero VALUES(123456.785);/*Redondea a .79*/
 INSERT INTO prueba_numero VALUES(123456.784);/*Redondea a .78*/
 INSERT INTO prueba_numero VALUES(null);
 
+ALTER TABLE prueba_numero ADD _letra VARCHAR(20);/*_letra no válido*/
+
 /*Puebas alias*/
 
 SELECT numero || 'Numero' as "Numero" FROM prueba_numero;/*Query valido*/
 SELECT numero || 'Numero' "Numero" FROM prueba_numero;/*Query valido*/
+SELECT numero || 'Numero' Numero FROM prueba_numero;/*Query valido*/
 
 /*NULL devoluciones*/
 
@@ -149,5 +153,12 @@ sorting, numeric values, and expressions.*/
 SELECT nombre, apellidos, salario FROM empleados
 ORDER BY 3 DESC, 2 ASC NULLS LAST;
 
+/*CHAR*/
+
+ALTER TABLE prueba_numero ADD letra5 CHAR(5);
+
+INSERT INTO prueba_numero VALUES(25, 'Hola' || ' Que tal ', 'poiuyp' );
 
 
+Como veo que de momento se pueden añadir documentos y no se si has recibido los mensajes, voy a incluir los documentos firmados y escaneados.
+Un saludo

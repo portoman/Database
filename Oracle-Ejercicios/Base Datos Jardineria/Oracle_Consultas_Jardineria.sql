@@ -9,6 +9,7 @@ select nombre, apellido1, apellido2 from empleados where codigojefe is null;
 3. Mostrar el nombre y cargo de los empleados que no sean directores de oficina
 
 select nombre, puesto from empleados where puesto!='Director Oficina';
+select nombre, puesto from empleados where puesto NOT IN('Director Oficina');
 
 4. Muestra el número de empleados que hay en la empresa
 
