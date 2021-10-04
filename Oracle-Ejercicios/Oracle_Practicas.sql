@@ -1,3 +1,5 @@
+/*DDL*/
+
 CREATE TABLE empresas(
     id_empresa          NUMBER CONSTRAINT id_empresa_pk PRIMARY KEY,
     nombre              VARCHAR2(10),
@@ -28,9 +30,15 @@ ALTER TABLE empleados MODIFY salario NUMBER CONSTRAINT salario_nn NOT NULL;
 
 ALTER TABLE empleados MODIFY email VARCHAR(20) CONSTRAINT email_uk UNIQUE;
 
+ALTER TABLE empleados DROP (email);
+
+DROP TABLE empleados;
+DROP TABLE empleados PURGE;
 
 
-/*Insert*/
+TRUNCATE TABLE empleados;
+
+/*DML*/
 
 INSERT INTO empresas VALUES(1,'Altia', 'Oleiros');
 INSERT INTO empresas VALUES(2,'Corunet', 'Coruña');
@@ -51,6 +59,21 @@ INSERT INTO empleados VALUES(3,'Luis','Mendez',1000,1,'ejemplo@correo.com');
 INSERT INTO empleados VALUES(4,'Verónica','Olano',2500,4,'adios@correo.com');
 INSERT INTO empleados VALUES(5,'Raquel','Tevez',4000,3,'hola@correo.com');
 INSERT INTO empleados VALUES(6,'Pablo','Rodriguez',5000,null,'hola2@correo.com');
+
+
+UPDATE empleados SET nombre='Joaquin' WHERE id_empleado=2;
+
+DELETE FROM empleados WHERE id_empleado=2;
+
+
+/*DML-TCL*/
+
+COMMIT;
+SAVE POINT;
+ROLLBACK;
+ROLLBACK TO SAVE POINT;
+
+/*JOINING TABLES*/
 
 
 /*NATURAL JOIN*/
@@ -136,7 +159,7 @@ select ''Coda''s favorite fetch toy is his orange ring' from prueba_numero;/*NOK
 /*There are four rows of data in the REGIONS table. Consider the following SQL statement:
 SELECT '6 * 6' “Area” FROM REGIONS;
 How many rows of results are returned and what value is returned by the Area column? 
-(Choose the best answer.D. 4 rows returned, Area column contains value 6 * 6 for all 4 rows
+ 4 rows returned, Area column contains value 6 * 6 for all 4 rows
 */
 
 /*Equivalent expresions*/
