@@ -72,3 +72,26 @@ ALTER TABLE cursos ADD CONSTRAINT cursos_pk PRIMARY KEY (codigo, fecha_inicio);
 
 ALTER TABLE tutores DROP PRIMARY KEY CASCADE;
 ALTER TABLE tutores ADD CONSTRAINT tutores_pk PRIMARY KEY(nombre, apellido_1, apellido_2);
+
+
+/*Ejemplo Foreign Key NULL*/
+
+CREATE TABLE empresa(
+    CIF VARCHAR(9) CONSTRAINT empresa_pk PRIMARY KEY,
+    nombre VARCHAR(15)
+   );
+
+CREATE TABLE trabajador(
+    DNI VARCHAR(9) CONSTRAINT trabajador_pk PRIMARY KEY,
+    nombre VARCHAR(15),
+    CIF VARCHAR(9),
+    CONSTRAINT cif_fk FOREIGN KEY (CIF) REFERENCES empresa(CIF)
+   );
+
+INSERT INTO empresa VALUES ('000001', 'Inditex');
+INSERT INTO empresa VALUES ('000002', 'Navantia');
+INSERT INTO empresa VALUES ('000003', 'Alcoa');
+
+INSERT INTO trabajador VALUES ('47474747P', 'Pedro', '000001');
+INSERT INTO trabajador VALUES ('55555555P', 'Luis', NUll);
+Insert into trabajador VALUES ('77777777P', 'Paco', '000003');
